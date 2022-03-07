@@ -1,3 +1,3 @@
 # MathKit
 
-A description of this package.
+Uses a string representing the expression to perform calculations.
