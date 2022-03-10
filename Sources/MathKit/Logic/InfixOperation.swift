@@ -27,54 +27,57 @@ public typealias InfixOperationBlock = (_ rhs: Double, _ lhs: Double) -> Double
 
 public struct InfixOperation: Action {
     
+    public enum Priority: Int {
+        case low
+        case medium
+        case high
+    }
+    
     public let stringValue: String
     
     public let formattedValue: String
+    
+    public let priority: Priority
     
     public let action: InfixOperationBlock
 }
 
 public extension InfixOperation {
     
-    static func isOperation(_ signature: String) -> Bool {
-        return InfixOperationContainer.shared.isOperation(signature)
-    }
-}
-
-extension InfixOperation {
-    
-    init(_ stringValue: String, _ formattedValue: String, _ action: @escaping InfixOperationBlock) {
+    init(_ stringValue: String, _ formattedValue: String, _ priority: Priority, _ action: @escaping InfixOperationBlock) {
         self.stringValue = stringValue
         self.formattedValue = formattedValue
+        self.priority = priority
         self.action = action
     }
 }
 
-final class InfixOperationContainer: OperationContainer {
+public class InfixOperationContainer: OperationContainer {
     
     public static var shared: InfixOperationContainer = InfixOperationContainer()
-    
-    public var characterSet: CharacterSet {
-        var characterSet = CharacterSet()
-        actions.forEach {
-            characterSet.insert(charactersIn: $0.stringValue)
-        }
-        return characterSet
-    }
     
     private var actions: [InfixOperation]
     
     private init() {
         self.actions = [
-            InfixOperation("+", "+") { $0 + $1 },
-            InfixOperation("-", "-") { $0 - $1 },
-            InfixOperation("*", "*") { $0 * $1 },
-            InfixOperation("/", "/") { $0 / $1 },
-            InfixOperation("^", "") { pow($0, $1) }
+            InfixOperation("+", "+", .low) { $0 + $1 },
+            InfixOperation("-", "-", .low) { $0 - $1 },
+            InfixOperation("*", "*", .medium) { $0 * $1 },
+            InfixOperation("/", "/", .medium) { $0 / $1 },
+            InfixOperation("^", "", .high) { pow($0, $1) }
         ]
     }
     
-    func isOperation(_ signature: String) -> Bool {
+    public func isOperation(_ signature: String) -> Bool {
         return actions.first(where: { $0.stringValue == signature }) != nil
+    }
+    
+    public func operation(_ token: Token, hasHigherPriorityThan other: Token) -> Bool {
+        guard let lhs = actions.first(where: { $0.stringValue == token.stringValue }),
+              let rhs = actions.first(where: { $0.stringValue == other.stringValue }) else {
+            preconditionFailure()
+        }
+        
+        return lhs.priority.rawValue > rhs.priority.rawValue
     }
 }

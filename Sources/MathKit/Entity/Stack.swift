@@ -21,34 +21,19 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public protocol InfixNotationConverting {
+public class Stack<Element> {
     
-    func reversePolishNotation(from expression: String, _ completion: TokenizedResult)
-}
-
-open class RailYard: InfixNotationConverting {
+    public private(set) var objects: [Element] = []
     
-    private let tokenizer: Tokenizing
-    
-    public init(tokenizer: Tokenizing = Tokenizer()) {
-        self.tokenizer = tokenizer
+    public var count: Int {
+        return objects.count
     }
     
-    // MARK: - InfixNotationConverting
-    
-    public func reversePolishNotation(from expression: String, _ completion: TokenizedResult) {
-        tokenizer.tokenize(expression) { result in
-            switch result {
-            case .success(let expression):
-                convert(expression, completion)
-            case .fail(_):
-                completion(result)
-            }
-        }
+    public func push(_ element: Element) {
+        objects.append(element)
     }
     
-    // MARK: - Private
-    
-    private func convert(_ expression: TokenizedExpression, _ completion: TokenizedResult) {
+    public func pop() -> Element? {
+        return objects.isEmpty ? nil : objects.removeLast()
     }
 }

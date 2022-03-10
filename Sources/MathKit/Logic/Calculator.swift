@@ -28,23 +28,11 @@ open class Calculator {
     private let converter: InfixNotationConverting
     
     public init(tokenizer: Tokenizing = Tokenizer()) {
-        self.converter = RailYard(tokenizer: tokenizer)
+        self.converter = ShuntingYard(tokenizer: tokenizer)
     }
     
     // MARK: - Public
     
     public func calculate(_ expression: String, _ completion: @escaping CalculationResult) {
-        converter.reversePolishNotation(from: expression) { result in
-            switch result {
-            case .success(let expression):
-                calculate(expression, completion)
-            case .fail(let fail):
-                completion(.fail(fail))
-            }
-        }
-    }
-    
-    public func calculate(_ expression: TokenizedExpression, _ completion: @escaping CalculationResult) {
-        
     }
 }

@@ -44,7 +44,7 @@ open class Tokenizer: Tokenizing {
         let expression = expression.replacingOccurrences(of: " ", with: "")
         let scanner = Scanner(string: expression)
         
-        var tokenizedExpression = TokenizedExpression()
+        let tokenizedExpression = TokenizedExpression()
         
         while scanner.currentIndex < expression.endIndex {
             let character = expression[scanner.currentIndex]

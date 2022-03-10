@@ -21,26 +21,40 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public struct TokenizedExpression: Equatable {
+public class TokenizedExpression: Equatable {
     
-    private var tokensArray: [Token] = []
+    public private(set) var tokensArray: [Token] = []
+    public private(set) var currentIndex: Int = 0
     
-    var last: Token? {
+    public var count: Int {
+        return tokensArray.count
+    }
+    
+    public var last: Token? {
         return tokensArray.last
     }
     
-    var isEmpty: Bool {
-        return tokensArray.isEmpty
+    public func add(_ token: Token) {
+        tokensArray.append(token)
     }
     
-    mutating func add(_ token: Token) {
-        tokensArray.append(token)
+    public func nextObject() -> Token {
+        let token = tokensArray[currentIndex]
+        currentIndex += 1
+        return token
+    }
+    
+    // MARK: - Equatable
+    
+    public static func == (lhs: TokenizedExpression, rhs: TokenizedExpression) -> Bool {
+        return lhs.tokensArray == rhs.tokensArray
     }
 }
 
 public extension TokenizedExpression {
     
-    init(with tokens: [Token]) {
+    convenience init(with tokens: [Token]) {
+        self.init()
         self.tokensArray = tokens
     }
 }
