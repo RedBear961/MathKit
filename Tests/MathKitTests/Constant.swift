@@ -21,26 +21,6 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public struct TokenizedExpression: Equatable {
-    
-    private var tokensArray: [Token] = []
-    
-    var last: Token? {
-        return tokensArray.last
-    }
-    
-    var isEmpty: Bool {
-        return tokensArray.isEmpty
-    }
-    
-    mutating func add(_ token: Token) {
-        tokensArray.append(token)
-    }
-}
+import Foundation
 
-public extension TokenizedExpression {
-    
-    init(with tokens: [Token]) {
-        self.tokensArray = tokens
-    }
-}
+let kExpectationTimeout: TimeInterval = 3

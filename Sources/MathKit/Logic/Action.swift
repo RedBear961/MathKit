@@ -21,26 +21,13 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public struct TokenizedExpression: Equatable {
+public protocol Action {
     
-    private var tokensArray: [Token] = []
-    
-    var last: Token? {
-        return tokensArray.last
-    }
-    
-    var isEmpty: Bool {
-        return tokensArray.isEmpty
-    }
-    
-    mutating func add(_ token: Token) {
-        tokensArray.append(token)
-    }
+    var stringValue: String { get }
+    var formattedValue: String { get }
 }
 
-public extension TokenizedExpression {
+public protocol OperationContainer {
     
-    init(with tokens: [Token]) {
-        self.tokensArray = tokens
-    }
+    func isOperation(_ signature: String) -> Bool
 }

@@ -21,6 +21,8 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+import Foundation
+
 public typealias TokenizedResult = (Result<TokenizedExpression>) -> Void
 
 public protocol Tokenizing {
@@ -30,11 +32,42 @@ public protocol Tokenizing {
 
 open class Tokenizer: Tokenizing {
     
-    public init() {}
+    private let infixContainer: OperationContainer
+    
+    public init() {
+        self.infixContainer = InfixOperationContainer.shared
+    }
     
     // MARK: - Tokenizing
     
     public func tokenize(_ expression: String, _ completion: TokenizedResult) {
-        completion(.fail(.unknown))
+        let expression = expression.replacingOccurrences(of: " ", with: "")
+        let scanner = Scanner(string: expression)
+        
+        var tokenizedExpression = TokenizedExpression()
+        
+        while scanner.currentIndex < expression.endIndex {
+            let character = expression[scanner.currentIndex]
+            
+            if character.isNumber ||
+                (character.isSign && !tokenizedExpression.last.isDecimal) {
+                guard let number = scanner.scanDouble() else {
+                    preconditionFailure()
+                }
+                
+                let token = Token(constant: number)
+                tokenizedExpression.add(token)
+                continue
+            }
+            
+            if infixContainer.isOperation(character.toString) {
+                let token = Token(stringValue: character.toString, type: .infix)
+                tokenizedExpression.add(token)
+                scanner.incrementIndex()
+                continue
+            }
+        }
+        
+        completion(.success(tokenizedExpression))
     }
 }

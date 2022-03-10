@@ -21,26 +21,15 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public struct TokenizedExpression: Equatable {
+extension Optional where Wrapped == Token {
     
-    private var tokensArray: [Token] = []
-    
-    var last: Token? {
-        return tokensArray.last
-    }
-    
-    var isEmpty: Bool {
-        return tokensArray.isEmpty
-    }
-    
-    mutating func add(_ token: Token) {
-        tokensArray.append(token)
-    }
-}
-
-public extension TokenizedExpression {
-    
-    init(with tokens: [Token]) {
-        self.tokensArray = tokens
+    /// Проверяет, является ли токен десятичным. В случае `.none` возвращает `false`.
+    var isDecimal: Bool {
+        switch self {
+        case .some(let token):
+            return token.type == .decimal
+        case .none:
+            return false
+        }
     }
 }

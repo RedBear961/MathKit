@@ -21,26 +21,10 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public struct TokenizedExpression: Equatable {
+extension Character {
     
-    private var tokensArray: [Token] = []
-    
-    var last: Token? {
-        return tokensArray.last
-    }
-    
-    var isEmpty: Bool {
-        return tokensArray.isEmpty
-    }
-    
-    mutating func add(_ token: Token) {
-        tokensArray.append(token)
-    }
-}
-
-public extension TokenizedExpression {
-    
-    init(with tokens: [Token]) {
-        self.tokensArray = tokens
+    /// Конвертирует символ в строку. Метод скорее для красоты, чем для функционала.
+    var toString: String {
+        return "\(self)"
     }
 }

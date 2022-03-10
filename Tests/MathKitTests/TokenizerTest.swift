@@ -24,34 +24,66 @@
 import XCTest
 @testable import MathKit
 
-final class CalculatorTest: XCTestCase {
+final class TokenizerTest: XCTestCase {
     
-    var calculator: Calculator!
+    var tokenizer: Tokenizer!
     
     // MARK: - Setup
 
     override func setUpWithError() throws {
-        calculator = Calculator()
+        tokenizer = Tokenizer()
     }
 
     override func tearDownWithError() throws {
-        calculator = nil
+        tokenizer = nil
     }
     
     // MARK: - Testing
     
-    /*
-    func test_thatSumTwoNumbersSuccess() {
-        // Given
-        let exp = "2 + 2"
+    func test_thatTokenizationTheSummaryOperationSuccess() {
+        let expression = "2 + 2"
+        let expectedResult = TokenizedExpression(with: [
+            Token(constant: 2),
+            Token(stringValue: "+", type: .infix),
+            Token(constant: 2)
+        ])
+        
+        test(expression, with: expectedResult)
+    }
+    
+    func test_thatTokenizationTheUnaryOperationSuccess() {
+        let expression = "2 / -2"
+        let expectedResult = TokenizedExpression(with: [
+            Token(constant: 2),
+            Token(stringValue: "/", type: .infix),
+            Token(constant: -2)
+        ])
+        
+        test(expression, with: expectedResult)
+    }
+    
+    func test_thatTokenizationMultipleOperationsSuccess() {
+        let expression = "2 + 4 * 2"
+        let expectedResult = TokenizedExpression(with: [
+            Token(constant: 2),
+            Token(stringValue: "+", type: .infix),
+            Token(constant: 4),
+            Token(stringValue: "*", type: .infix),
+            Token(constant: 2)
+        ])
+        
+        test(expression, with: expectedResult)
+    }
+    
+    // MARK: - Helper
+    
+    func test(_ expression: String, with expectedResult: TokenizedExpression) {
         let expectation = XCTestExpectation()
         
-        // When
-        calculator.calculate(exp) { result in
-            // Then
+        tokenizer.tokenize(expression) { result in
             switch result {
-            case .success(let number):
-                XCTAssertEqual(number, 4)
+            case .success(let expression):
+                XCTAssertEqual(expression, expectedResult)
             case .fail(_):
                 XCTFail()
             }
@@ -59,7 +91,6 @@ final class CalculatorTest: XCTestCase {
             expectation.fulfill()
         }
         
-        wait(for: [expectation], timeout: 3)
+        wait(for: [expectation], timeout: kExpectationTimeout)
     }
-     */
 }

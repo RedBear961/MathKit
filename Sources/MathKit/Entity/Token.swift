@@ -21,26 +21,27 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public struct TokenizedExpression: Equatable {
+public struct Token: Equatable {
     
-    private var tokensArray: [Token] = []
+    let stringValue: String
+    let constant: Double?
+    let type: TokenType
     
-    var last: Token? {
-        return tokensArray.last
+    enum TokenType {
+        
+        case decimal
+        case infix
+        
+        case unknown
     }
     
-    var isEmpty: Bool {
-        return tokensArray.isEmpty
+    init(stringValue: String, constant: Double? = nil, type: TokenType) {
+        self.stringValue = stringValue
+        self.constant = constant
+        self.type = type
     }
     
-    mutating func add(_ token: Token) {
-        tokensArray.append(token)
-    }
-}
-
-public extension TokenizedExpression {
-    
-    init(with tokens: [Token]) {
-        self.tokensArray = tokens
+    init(constant: Double) {
+        self.init(stringValue: "\(constant)", constant: constant, type: .decimal)
     }
 }
