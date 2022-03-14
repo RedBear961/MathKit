@@ -24,6 +24,7 @@
 public protocol InfixNotationConverting {
     
     func postfixNotation(from expression: TokenizedExpression, _ completion: TokenizedResult)
+    func postfixNotation(from expression: String, _ completion: TokenizedResult)
 }
 
 open class ShuntingYard: InfixNotationConverting {
@@ -41,24 +42,36 @@ open class ShuntingYard: InfixNotationConverting {
         let postfixNotation = TokenizedExpression()
         let stack = Stack<Token>()
         
-        var index = 0
-        while index < expression.count {
-            let token = postfixNotation.nextObject()
-            
+        while let token = expression.nextObject() {
             switch token.type {
             case .decimal:
                 postfixNotation.add(token)
             case .infix:
                 processInfixOperation(
                     token,
-                    expression: expression,
+                    expression: postfixNotation,
                     stack: stack
                 )
             case .unknown:
                 completion(.fail(.unknown))
             }
-            
-            index += 1
+        }
+        
+        while let token = stack.pop() {
+            postfixNotation.add(token)
+        }
+        
+        completion(.success(postfixNotation))
+    }
+    
+    public func postfixNotation(from expression: String, _ completion: TokenizedResult) {
+        tokenizer.tokenize(expression) { result in
+            switch result {
+            case .success(let expression):
+                postfixNotation(from: expression, completion)
+            case .fail:
+                completion(.fail(.unknown))
+            }
         }
     }
     
@@ -73,7 +86,7 @@ open class ShuntingYard: InfixNotationConverting {
             var topToken: Token? = stack.pop()
 
             while let tmpToken = topToken, tmpToken.type == .infix,
-                  infixContainer.operation(token, hasHigherPriorityThan: tmpToken) {
+                  infixContainer.operation(tmpToken, hasHigherOrEqualPriorityThan: token) {
                 expression.add(tmpToken)
                 topToken = stack.pop()
             }

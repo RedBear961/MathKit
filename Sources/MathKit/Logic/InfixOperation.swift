@@ -72,12 +72,16 @@ public class InfixOperationContainer: OperationContainer {
         return actions.first(where: { $0.stringValue == signature }) != nil
     }
     
-    public func operation(_ token: Token, hasHigherPriorityThan other: Token) -> Bool {
+    public func operation(_ token: Token, hasHigherOrEqualPriorityThan other: Token) -> Bool {
         guard let lhs = actions.first(where: { $0.stringValue == token.stringValue }),
               let rhs = actions.first(where: { $0.stringValue == other.stringValue }) else {
             preconditionFailure()
         }
         
-        return lhs.priority.rawValue > rhs.priority.rawValue
+        return lhs.priority.rawValue >= rhs.priority.rawValue
+    }
+    
+    public func operation(from token: Token) -> InfixOperation? {
+        return actions.first(where: { $0.stringValue == token.stringValue })
     }
 }

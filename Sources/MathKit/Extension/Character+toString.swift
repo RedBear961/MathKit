@@ -24,7 +24,7 @@
 extension Character {
     
     /// Конвертирует символ в строку. Метод скорее для красоты, чем для функционала.
-    var toString: String {
+    @inlinable var toString: String {
         return "\(self)"
     }
 }

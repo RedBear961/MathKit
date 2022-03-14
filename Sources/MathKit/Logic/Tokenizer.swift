@@ -52,7 +52,8 @@ open class Tokenizer: Tokenizing {
             if character.isNumber ||
                 (character.isSign && !tokenizedExpression.last.isDecimal) {
                 guard let number = scanner.scanDouble() else {
-                    preconditionFailure()
+                    completion(.fail(.unknown))
+                    return
                 }
                 
                 let token = Token(constant: number)

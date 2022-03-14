@@ -21,12 +21,15 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import Foundation
-
-extension Scanner {
+extension Token {
     
-    /// Увеличивает параметр `currentIndex` на единицу.
-    @inlinable func incrementIndex() {
-        currentIndex = string.index(after: currentIndex)
+    /// Удобный инициализатор числового токена.
+    static func constant(_ decimal: Double) -> Token{
+        return Token(constant: decimal)
+    }
+    
+    /// Удобный инициализатор токена инфиксной операции.
+    static func infix(_ stringValue: String) -> Token {
+        return Token(stringValue: stringValue, type: .infix)
     }
 }

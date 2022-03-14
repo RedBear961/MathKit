@@ -43,9 +43,9 @@ final class TokenizerTest: XCTestCase {
     func test_thatTokenizationTheSummaryOperationSuccess() {
         let expression = "2 + 2"
         let expectedResult = TokenizedExpression(with: [
-            Token(constant: 2),
-            Token(stringValue: "+", type: .infix),
-            Token(constant: 2)
+            .constant(2),
+            .infix("+"),
+            .constant(2)
         ])
         
         test(expression, with: expectedResult)
@@ -54,9 +54,9 @@ final class TokenizerTest: XCTestCase {
     func test_thatTokenizationTheUnaryOperationSuccess() {
         let expression = "2 / -2"
         let expectedResult = TokenizedExpression(with: [
-            Token(constant: 2),
-            Token(stringValue: "/", type: .infix),
-            Token(constant: -2)
+            .constant(2),
+            .infix("/"),
+            .constant(-2)
         ])
         
         test(expression, with: expectedResult)
@@ -65,11 +65,11 @@ final class TokenizerTest: XCTestCase {
     func test_thatTokenizationMultipleOperationsSuccess() {
         let expression = "2 + 4 * 2"
         let expectedResult = TokenizedExpression(with: [
-            Token(constant: 2),
-            Token(stringValue: "+", type: .infix),
-            Token(constant: 4),
-            Token(stringValue: "*", type: .infix),
-            Token(constant: 2)
+            .constant(2),
+            .infix("+"),
+            .constant(4),
+            .infix("*"),
+            .constant(2)
         ])
         
         test(expression, with: expectedResult)

@@ -38,7 +38,12 @@ public class TokenizedExpression: Equatable {
         tokensArray.append(token)
     }
     
-    public func nextObject() -> Token {
+    public func nextObject() -> Token? {
+        if currentIndex == count {
+            currentIndex = 0
+            return nil
+        }
+        
         let token = tokensArray[currentIndex]
         currentIndex += 1
         return token
@@ -56,5 +61,17 @@ public extension TokenizedExpression {
     convenience init(with tokens: [Token]) {
         self.init()
         self.tokensArray = tokens
+    }
+}
+
+extension TokenizedExpression: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        var description = ""
+        tokensArray.forEach { token in
+            description.append(token.stringValue)
+            description.append(" ")
+        }
+        return description
     }
 }

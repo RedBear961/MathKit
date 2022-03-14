@@ -24,7 +24,7 @@
 extension Character {
     
     /// Проверяет, является ли символ знаком числа: плюсом или минусом.
-    var isSign: Bool {
+    @inlinable var isSign: Bool {
         return self == "+" || self == "-"
     }
 }

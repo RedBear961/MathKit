@@ -29,11 +29,26 @@ public class Stack<Element> {
         return objects.count
     }
     
+    public var isEmpty: Bool {
+        return objects.isEmpty
+    }
+    
     public func push(_ element: Element) {
         objects.append(element)
     }
     
     public func pop() -> Element? {
         return objects.isEmpty ? nil : objects.removeLast()
+    }
+}
+
+extension Stack: CustomDebugStringConvertible where Element == Double {
+    
+    public var debugDescription: String {
+        var description = ""
+        objects.forEach { element in
+            description.append("\(element) ")
+        }
+        return description
     }
 }

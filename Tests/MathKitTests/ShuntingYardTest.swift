@@ -24,58 +24,64 @@
 import XCTest
 @testable import MathKit
 
-final class CalculatorTest: XCTestCase {
-    
-    var calculator: Calculator!
+final class ShuntingYardTest: XCTestCase {
+
+    var shuntingYard: ShuntingYard!
     
     // MARK: - Setup
 
     override func setUpWithError() throws {
-        calculator = Calculator()
+        shuntingYard = ShuntingYard()
     }
 
     override func tearDownWithError() throws {
-        calculator = nil
+        shuntingYard = nil
     }
     
     // MARK: - Testing
     
-    func test_thatSumTwoNumbersSuccess() {
+    func test_thatShuntingYardConvertingInfixOperationSuccess() {
         let expression = TokenizedExpression(with: [
+            .constant(2),
+            .infix("+"),
+            .constant(2)
+        ])
+        
+        let expectedResult = TokenizedExpression(with: [
+            .constant(2),
+            .constant(2),
+            .infix("+")
+        ])
+        
+        test(expression, with: expectedResult)
+    }
+    
+    func test_thatShuntingYardConvertingOperationWithDiffrentPrioritySuccess() {
+        let expression = TokenizedExpression(with: [
+            .constant(2),
+            .infix("*"),
+            .constant(3),
+            .infix("+"),
+            .constant(4)
+        ])
+        
+        let expectedResult = TokenizedExpression(with: [
             .constant(2),
             .constant(3),
             .infix("*"),
             .constant(4),
             .infix("+")
         ])
-        let expectedResult: Double = 10
-        
-        test(expression, with: expectedResult)
-    }
-    
-    func test_thatTheMultipleOperationSuccess() {
-        let expression = TokenizedExpression(with: [
-            .constant(2),
-            .constant(8),
-            .constant(3),
-            .infix("^"),
-            .infix("+"),
-            .constant(4),
-            .constant(-2),
-            .infix("*"),
-            .infix("-")
-        ])
-        let expectedResult: Double = 522
         
         test(expression, with: expectedResult)
     }
     
     // MARK: - Helper
 
-    func test(_ expression: TokenizedExpression, with expectedResult: Double) {
+    func test(_ expression: TokenizedExpression, with expectedResult: TokenizedExpression) {
         let expectation = XCTestExpectation()
         
-        calculator.calculate(expression) { result in
+        shuntingYard.postfixNotation(from: expression) { result in
             switch result {
             case .success(let expression):
                 XCTAssertEqual(expression, expectedResult)

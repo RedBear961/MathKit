@@ -42,6 +42,13 @@ public struct Token: Equatable {
     }
     
     init(constant: Double) {
-        self.init(stringValue: "\(constant)", constant: constant, type: .decimal)
+        self.init(stringValue: "\(constant, format: "%g")", constant: constant, type: .decimal)
+    }
+}
+
+extension String.StringInterpolation {
+    
+    mutating func appendInterpolation(_ value: CVarArg, format: String) {
+        appendLiteral(String(format: format, value))
     }
 }
