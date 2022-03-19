@@ -21,34 +21,27 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+import Foundation
+
 public struct Token: Equatable {
     
-    let stringValue: String
-    let constant: Double?
-    let type: TokenType
+    public let stringValue: String
     
-    enum TokenType {
+    public let type: TokenType
+    
+    public enum TokenType: Equatable {
         
-        case decimal
-        case infix
-        
-        case unknown
+        case decimal(NSDecimalNumber)
+        case infix(InfixAction)
+        case postfix(PostfixAction)
     }
     
-    init(stringValue: String, constant: Double? = nil, type: TokenType) {
+    public init(stringValue: String, type: TokenType) {
         self.stringValue = stringValue
-        self.constant = constant
         self.type = type
     }
     
-    init(constant: Double) {
-        self.init(stringValue: "\(constant, format: "%g")", constant: constant, type: .decimal)
-    }
-}
-
-extension String.StringInterpolation {
-    
-    mutating func appendInterpolation(_ value: CVarArg, format: String) {
-        appendLiteral(String(format: format, value))
+    public init(constant: NSDecimalNumber) {
+        self.init(stringValue: "\(constant.doubleValue, format: "%g")", type: .decimal(constant))
     }
 }

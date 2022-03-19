@@ -32,11 +32,7 @@ public protocol Tokenizing {
 
 open class Tokenizer: Tokenizing {
     
-    private let infixContainer: OperationContainer
-    
-    public init() {
-        self.infixContainer = InfixOperationContainer.shared
-    }
+    public init() {}
     
     // MARK: - Tokenizing
     
@@ -51,18 +47,25 @@ open class Tokenizer: Tokenizing {
             
             if character.isNumber ||
                 (character.isSign && !tokenizedExpression.last.isDecimal) {
-                guard let number = scanner.scanDouble() else {
+                guard let number = scanner.scanDecimal() else {
                     completion(.fail(.unknown))
                     return
                 }
                 
-                let token = Token(constant: number)
+                let token = Token(constant: number as NSDecimalNumber)
                 tokenizedExpression.add(token)
                 continue
             }
             
-            if infixContainer.isOperation(character.toString) {
-                let token = Token(stringValue: character.toString, type: .infix)
+            if let action = Container.infix(from: character.toString) {
+                let token = Token(stringValue: character.toString, type: .infix(action))
+                tokenizedExpression.add(token)
+                scanner.incrementIndex()
+                continue
+            }
+            
+            if let action = Container.postfix(from: character.toString) {
+                let token = Token(stringValue: character.toString, type: .postfix(action))
                 tokenizedExpression.add(token)
                 scanner.incrementIndex()
                 continue

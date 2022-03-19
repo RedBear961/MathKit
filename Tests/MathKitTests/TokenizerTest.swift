@@ -75,6 +75,20 @@ final class TokenizerTest: XCTestCase {
         test(expression, with: expectedResult)
     }
     
+    func test_thatTokenizationMultipleOperationsAndPostfixOperationSuccess() {
+        let expression = "2 + 4! * 2"
+        let expectedResult = TokenizedExpression(with: [
+            .constant(2),
+            .infix("+"),
+            .constant(4),
+            .postfix("!"),
+            .infix("*"),
+            .constant(2)
+        ])
+        
+        test(expression, with: expectedResult)
+    }
+    
     // MARK: - Helper
     
     func test(_ expression: String, with expectedResult: TokenizedExpression) {

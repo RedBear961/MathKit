@@ -21,15 +21,11 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension Token {
+import Foundation
+
+public extension String.StringInterpolation {
     
-    /// Удобный инициализатор числового токена.
-    static func constant(_ decimal: Double) -> Token{
-        return Token(constant: decimal)
-    }
-    
-    /// Удобный инициализатор токена инфиксной операции.
-    static func infix(_ stringValue: String) -> Token {
-        return Token(stringValue: stringValue, type: .infix)
+    mutating func appendInterpolation(_ value: CVarArg, format: String) {
+        appendLiteral(String(format: format, value))
     }
 }

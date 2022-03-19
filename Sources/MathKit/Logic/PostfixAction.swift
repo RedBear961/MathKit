@@ -21,10 +21,20 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public extension Character {
+import Foundation
+
+public struct PostfixAction: Action {
     
-    /// Конвертирует символ в строку. Метод скорее для красоты, чем для функционала.
-    @inlinable var toString: String {
-        return "\(self)"
+    public typealias ActionBlock = (_ op: NSDecimalNumber) -> NSDecimalNumber
+    
+    public let stringValue: String
+    
+    public let action: ActionBlock
+    
+    public static func postfix(
+        _ stringValue: String,
+        _ action: @escaping ActionBlock
+    ) -> PostfixAction {
+        return PostfixAction(stringValue: stringValue, action: action)
     }
 }

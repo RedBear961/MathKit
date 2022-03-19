@@ -30,10 +30,9 @@ public protocol InfixNotationConverting {
 open class ShuntingYard: InfixNotationConverting {
     
     private let tokenizer: Tokenizing
-    private let infixContainer = InfixOperationContainer.shared
     
-    public init(tokenizer: Tokenizing = Tokenizer()) {
-        self.tokenizer = tokenizer
+    public init() {
+        self.tokenizer = Tokenizer()
     }
     
     // MARK: - InfixNotationConverting
@@ -52,8 +51,8 @@ open class ShuntingYard: InfixNotationConverting {
                     expression: postfixNotation,
                     stack: stack
                 )
-            case .unknown:
-                completion(.fail(.unknown))
+            case .postfix:
+                stack.push(token)
             }
         }
         
@@ -82,12 +81,16 @@ open class ShuntingYard: InfixNotationConverting {
         expression: TokenizedExpression,
         stack: Stack<Token>
     ) {
+        guard case .infix(let action) = token.type else {
+            preconditionFailure()
+        }
+        
         if stack.count > 0 {
-            var topToken: Token? = stack.pop()
+            var topToken = stack.pop()
 
-            while let tmpToken = topToken, tmpToken.type == .infix,
-                  infixContainer.operation(tmpToken, hasHigherOrEqualPriorityThan: token) {
-                expression.add(tmpToken)
+            while case .infix(let otherAction) = topToken?.type,
+                  otherAction.priority >= action.priority {
+                expression.add(topToken!)
                 topToken = stack.pop()
             }
             

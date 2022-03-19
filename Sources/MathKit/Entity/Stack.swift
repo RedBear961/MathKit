@@ -21,6 +21,8 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+import Foundation
+
 public class Stack<Element> {
     
     public private(set) var objects: [Element] = []
@@ -38,11 +40,21 @@ public class Stack<Element> {
     }
     
     public func pop() -> Element? {
-        return objects.isEmpty ? nil : objects.removeLast()
+        return objects.popLast()
+    }
+    
+    public func pop(count: Int) -> [Element]? {
+        guard objects.count >= count else { return nil }
+        
+        let range = objects.count - count..<objects.count
+        let values = objects[range]
+        objects.removeSubrange(range)
+        
+        return Array(values)
     }
 }
 
-extension Stack: CustomDebugStringConvertible where Element == Double {
+extension Stack: CustomDebugStringConvertible {
     
     public var debugDescription: String {
         var description = ""

@@ -21,13 +21,14 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension Optional where Wrapped == Token {
+public extension Optional where Wrapped == Token {
     
     /// Проверяет, является ли токен десятичным. В случае `.none` возвращает `false`.
     var isDecimal: Bool {
         switch self {
         case .some(let token):
-            return token.type == .decimal
+            if case .decimal = token.type { return true }
+            return false
         case .none:
             return false
         }

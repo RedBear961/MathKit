@@ -48,7 +48,7 @@ final class CalculatorTest: XCTestCase {
             .constant(4),
             .infix("+")
         ])
-        let expectedResult: Double = 10
+        let expectedResult: NSDecimalNumber = 10
         
         test(expression, with: expectedResult)
     }
@@ -65,14 +65,14 @@ final class CalculatorTest: XCTestCase {
             .infix("*"),
             .infix("-")
         ])
-        let expectedResult: Double = 522
+        let expectedResult: NSDecimalNumber = 522
         
         test(expression, with: expectedResult)
     }
     
     // MARK: - Helper
 
-    func test(_ expression: TokenizedExpression, with expectedResult: Double) {
+    func test(_ expression: TokenizedExpression, with expectedResult: NSDecimalNumber) {
         let expectation = XCTestExpectation()
         
         calculator.calculate(expression) { result in

@@ -23,7 +23,7 @@
 
 import Foundation
 
-extension Scanner {
+public extension Scanner {
     
     /// Увеличивает параметр `currentIndex` на единицу.
     @inlinable func incrementIndex() {

@@ -21,13 +21,56 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public protocol Action {
+import Foundation
+
+public protocol Action: Equatable {
     
     var stringValue: String { get }
-    var formattedValue: String { get }
 }
 
-public protocol OperationContainer {
+public extension Action {
+
+    static func == (_ lhs: Self, _ rhs: Self) -> Bool {
+        return lhs.stringValue == rhs.stringValue
+    }
+}
+
+internal class Resolver<T: Action> {
     
-    func isOperation(_ signature: String) -> Bool
+    private var container: [T] = []
+    
+    internal init(_ container: [T]) {
+        self.container = container
+    }
+    
+    internal func operation(from stringValue: String) -> T? {
+        return container.first { $0.stringValue == stringValue }
+    }
+}
+
+public class Container {
+    
+    static var infix: Resolver<InfixAction> = {
+        Resolver([
+            .infix("+", .low) { $0 + $1 },
+            .infix("-", .low) { $0 - $1 },
+            .infix("*", .medium) { $0 * $1 },
+            .infix("/", .medium) { $0 / $1 },
+            .infix("^", .high) { $0.raising(toPower: $1) }
+        ])
+    }()
+    
+    static var postfix: Resolver<PostfixAction> = {
+        Resolver([
+            .postfix("!") { ($0 + 1).gamma() }
+        ])
+    }()
+    
+    static func infix(from signature: String) -> InfixAction? {
+        return infix.operation(from: signature)
+    }
+    
+    static func postfix(from signature: String) -> PostfixAction? {
+        return postfix.operation(from: signature)
+    }
 }

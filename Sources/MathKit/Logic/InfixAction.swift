@@ -21,10 +21,39 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public extension Character {
+import Foundation
+
+public struct InfixAction: Action {
     
-    /// Конвертирует символ в строку. Метод скорее для красоты, чем для функционала.
-    @inlinable var toString: String {
-        return "\(self)"
+    public enum Priority: Comparable {
+        case low
+        case medium
+        case high
+    }
+    
+    public typealias ActionBlock = (_ rhs: NSDecimalNumber, _ lhs: NSDecimalNumber) -> NSDecimalNumber
+    
+    public let stringValue: String
+    
+    public let priority: Priority
+    
+    public let action: ActionBlock
+    
+    public init(
+        _ stringValue: String,
+        _ priority: Priority,
+        _ action: @escaping ActionBlock
+    ) {
+        self.stringValue = stringValue
+        self.priority = priority
+        self.action = action
+    }
+    
+    public static func infix(
+        _ stringValue: String,
+        _ priority: Priority,
+        _ action: @escaping ActionBlock
+    ) -> InfixAction {
+        return InfixAction(stringValue, priority, action)
     }
 }

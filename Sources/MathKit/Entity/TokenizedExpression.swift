@@ -26,11 +26,11 @@ public class TokenizedExpression: Equatable {
     public private(set) var tokensArray: [Token] = []
     public private(set) var currentIndex: Int = 0
     
-    public var count: Int {
+    @inlinable public var count: Int {
         return tokensArray.count
     }
     
-    public var last: Token? {
+    @inlinable public var last: Token? {
         return tokensArray.last
     }
     

@@ -21,10 +21,29 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public extension Character {
+import Foundation
+@testable import MathKit
+
+extension Token {
     
-    /// Конвертирует символ в строку. Метод скорее для красоты, чем для функционала.
-    @inlinable var toString: String {
-        return "\(self)"
+    /// Удобный инициализатор числового токена.
+    static func constant(_ decimal: NSDecimalNumber) -> Token {
+        return Token(constant: decimal)
+    }
+    
+    /// Удобный инициализатор токена инфиксной операции.
+    static func infix(_ stringValue: String) -> Token {
+        return Token(
+            stringValue: stringValue,
+            type: .infix(Container.infix(from: stringValue)!)
+        )
+    }
+    
+    /// Удобный инициализатор токена постфиксной операции.
+    static func postfix(_ stringValue: String) -> Token {
+        return Token(
+            stringValue: stringValue,
+            type: .postfix(Container.postfix(from: stringValue)!)
+        )
     }
 }

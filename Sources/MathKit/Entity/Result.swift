@@ -30,12 +30,12 @@ public enum Result<T> {
 public struct Fail {
     
     public let reason: String
-    public let range: Range<String.Index>? = nil
-}
-
-extension Fail {
     
-    static var unknown: Fail {
+    public let range: Range<String.Index>? = nil
+    
+    // MARK: Reason
+    
+    public static var unknown: Fail {
         return Fail(reason: "Unknown error")
     }
 }

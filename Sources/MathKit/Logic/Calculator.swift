@@ -21,19 +21,19 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public typealias CalculationResult = (Result<Double>) -> Void
+import Foundation
 
-open class Calculator {
+public class Calculator {
     
-    private let converter: InfixNotationConverting
-    private let infixContainer: InfixOperationContainer
+    private let converter: ShuntingYard
     
-    public init(tokenizer: Tokenizing = Tokenizer()) {
-        self.converter = ShuntingYard(tokenizer: tokenizer)
-        self.infixContainer = InfixOperationContainer.shared
+    public init() {
+        self.converter = ShuntingYard()
     }
     
     // MARK: - Public
+    
+    public typealias CalculationResult = (Result<NSDecimalNumber>) -> Void
     
     public func calculate(_ expression: String, _ completion: @escaping CalculationResult) {
         converter.postfixNotation(from: expression) { result in
@@ -47,23 +47,27 @@ open class Calculator {
     }
     
     public func calculate(_ expression: TokenizedExpression, _ completion: @escaping CalculationResult) {
-        let stack = Stack<Double>()
+        let stack = Stack<NSDecimalNumber>()
         
         while let token = expression.nextObject() {
             switch token.type {
-            case .decimal:
-                stack.push(token.constant!)
-            case .infix:
-                guard let values = popValues(count: 2, from: stack),
-                      let operation = infixContainer.operation(from: token) else {
+            case .decimal(let number):
+                stack.push(number)
+            case .infix(let infix):
+                guard let values = stack.pop(count: 2) else {
                     completion(.fail(.unknown))
                     return
                 }
                 
-                let result = operation.action(values[1], values[0])
+                let result = infix.action(values[0], values[1])
                 stack.push(result)
-            case .unknown:
-                completion(.fail(.unknown))
+            case .postfix(let postfix):
+                guard let value = stack.pop() else {
+                    completion(.fail(.unknown))
+                    return
+                }
+                let result = postfix.action(value)
+                stack.push(result)
             }
             
             print(stack)
@@ -75,18 +79,5 @@ open class Calculator {
         }
         
         completion(.success(result))
-    }
-    
-    // MARK: - Private
-    
-    private func popValues(count: Int, from stack: Stack<Double>) -> [Double]? {
-        var values = [Double]()
-        for _ in 0..<count {
-            guard let value = stack.pop() else {
-                return nil
-            }
-            values.append(value)
-        }
-        return values
     }
 }

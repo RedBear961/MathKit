@@ -21,10 +21,38 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public extension Character {
+import Foundation
+
+/// Расширение, добавляющее математические операции над классом.
+public extension NSDecimalNumber {
     
-    /// Конвертирует символ в строку. Метод скорее для красоты, чем для функционала.
-    @inlinable var toString: String {
-        return "\(self)"
+    /// Сложение.
+    static func + (_ lhs: NSDecimalNumber, rhs: NSDecimalNumber) -> NSDecimalNumber {
+        return lhs.adding(rhs)
+    }
+    
+    /// Вычитание.
+    static func - (_ lhs: NSDecimalNumber, rhs: NSDecimalNumber) -> NSDecimalNumber {
+        return lhs.subtracting(rhs)
+    }
+    
+    /// Умножение.
+    static func * (_ lhs: NSDecimalNumber, rhs: NSDecimalNumber) -> NSDecimalNumber {
+        return lhs.multiplying(by: rhs)
+    }
+    
+    /// Деление.
+    static func / (_ lhs: NSDecimalNumber, rhs: NSDecimalNumber) -> NSDecimalNumber {
+        return lhs.dividing(by: rhs)
+    }
+    
+    /// Возведение в степень.
+    func raising(toPower: NSDecimalNumber) -> NSDecimalNumber {
+        return NSDecimalNumber(value: pow(doubleValue, toPower.doubleValue))
+    }
+    
+    /// Гамма-фукнция.
+    func gamma() -> NSDecimalNumber {
+        return NSDecimalNumber(value: tgamma(doubleValue))
     }
 }
