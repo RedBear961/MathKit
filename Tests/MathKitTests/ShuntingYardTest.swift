@@ -42,14 +42,14 @@ final class ShuntingYardTest: XCTestCase {
     
     func test_thatShuntingYardConvertingInfixOperationSuccess() {
         let expression = TokenizedExpression(with: [
-            .constant(2),
+            .decimal(2),
             .infix("+"),
-            .constant(2)
+            .decimal(2)
         ])
         
         let expectedResult = TokenizedExpression(with: [
-            .constant(2),
-            .constant(2),
+            .decimal(2),
+            .decimal(2),
             .infix("+")
         ])
         
@@ -58,18 +58,18 @@ final class ShuntingYardTest: XCTestCase {
     
     func test_thatShuntingYardConvertingOperationWithDiffrentPrioritySuccess() {
         let expression = TokenizedExpression(with: [
-            .constant(2),
+            .decimal(2),
             .infix("*"),
-            .constant(3),
+            .decimal(3),
             .infix("+"),
-            .constant(4)
+            .decimal(4)
         ])
         
         let expectedResult = TokenizedExpression(with: [
-            .constant(2),
-            .constant(3),
+            .decimal(2),
+            .decimal(3),
             .infix("*"),
-            .constant(4),
+            .decimal(4),
             .infix("+")
         ])
         

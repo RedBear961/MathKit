@@ -42,7 +42,7 @@ open class ShuntingYard: InfixNotationConverting {
         let stack = Stack<Token>()
         
         while let token = expression.nextObject() {
-            switch token.type {
+            switch token {
             case .decimal:
                 postfixNotation.add(token)
             case .infix:
@@ -53,6 +53,8 @@ open class ShuntingYard: InfixNotationConverting {
                 )
             case .postfix:
                 stack.push(token)
+            case .bracket(let bracket):
+                break
             }
         }
         
@@ -81,14 +83,14 @@ open class ShuntingYard: InfixNotationConverting {
         expression: TokenizedExpression,
         stack: Stack<Token>
     ) {
-        guard case .infix(let action) = token.type else {
+        guard case .infix(let action) = token else {
             preconditionFailure()
         }
         
         if stack.count > 0 {
             var topToken = stack.pop()
 
-            while case .infix(let otherAction) = topToken?.type,
+            while case .infix(let otherAction) = topToken,
                   otherAction.priority >= action.priority {
                 expression.add(topToken!)
                 topToken = stack.pop()

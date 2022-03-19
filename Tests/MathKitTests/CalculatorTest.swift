@@ -42,10 +42,10 @@ final class CalculatorTest: XCTestCase {
     
     func test_thatSumTwoNumbersSuccess() {
         let expression = TokenizedExpression(with: [
-            .constant(2),
-            .constant(3),
+            .decimal(2),
+            .decimal(3),
             .infix("*"),
-            .constant(4),
+            .decimal(4),
             .infix("+")
         ])
         let expectedResult: NSDecimalNumber = 10
@@ -55,13 +55,13 @@ final class CalculatorTest: XCTestCase {
     
     func test_thatTheMultipleOperationSuccess() {
         let expression = TokenizedExpression(with: [
-            .constant(2),
-            .constant(8),
-            .constant(3),
+            .decimal(2),
+            .decimal(8),
+            .decimal(3),
             .infix("^"),
             .infix("+"),
-            .constant(4),
-            .constant(-2),
+            .decimal(4),
+            .decimal(-2),
             .infix("*"),
             .infix("-")
         ])

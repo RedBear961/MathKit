@@ -69,7 +69,7 @@ extension TokenizedExpression: CustomDebugStringConvertible {
     public var debugDescription: String {
         var description = ""
         tokensArray.forEach { token in
-            description.append(token.stringValue)
+            description.append(token.debugDescription)
             description.append(" ")
         }
         return description

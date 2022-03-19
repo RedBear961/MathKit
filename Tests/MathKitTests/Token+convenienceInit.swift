@@ -26,24 +26,13 @@ import Foundation
 
 extension Token {
     
-    /// Удобный инициализатор числового токена.
-    static func constant(_ decimal: NSDecimalNumber) -> Token {
-        return Token(constant: decimal)
-    }
-    
     /// Удобный инициализатор токена инфиксной операции.
     static func infix(_ stringValue: String) -> Token {
-        return Token(
-            stringValue: stringValue,
-            type: .infix(Container.infix(from: stringValue)!)
-        )
+        return .infix(Container.infix(from: stringValue)!)
     }
     
     /// Удобный инициализатор токена постфиксной операции.
     static func postfix(_ stringValue: String) -> Token {
-        return Token(
-            stringValue: stringValue,
-            type: .postfix(Container.postfix(from: stringValue)!)
-        )
+        return .postfix(Container.postfix(from: stringValue)!)
     }
 }

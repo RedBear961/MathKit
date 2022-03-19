@@ -27,7 +27,7 @@ public extension Optional where Wrapped == Token {
     var isDecimal: Bool {
         switch self {
         case .some(let token):
-            if case .decimal = token.type { return true }
+            if case .decimal = token { return true }
             return false
         case .none:
             return false

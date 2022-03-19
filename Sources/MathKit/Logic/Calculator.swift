@@ -50,7 +50,7 @@ public class Calculator {
         let stack = Stack<NSDecimalNumber>()
         
         while let token = expression.nextObject() {
-            switch token.type {
+            switch token {
             case .decimal(let number):
                 stack.push(number)
             case .infix(let infix):
@@ -68,9 +68,9 @@ public class Calculator {
                 }
                 let result = postfix.action(value)
                 stack.push(result)
+            case .bracket(let bracket):
+                break
             }
-            
-            print(stack)
         }
         
         guard let result = stack.pop(), stack.isEmpty else {

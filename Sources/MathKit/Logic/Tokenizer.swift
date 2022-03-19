@@ -52,21 +52,22 @@ open class Tokenizer: Tokenizing {
                     return
                 }
                 
-                let token = Token(constant: number as NSDecimalNumber)
-                tokenizedExpression.add(token)
+                tokenizedExpression.add(.decimal(number as NSDecimalNumber))
                 continue
             }
             
+//            if character == "(" {
+//                let token = Token(stringValue: character, type: .bracket(.open))
+//            }
+            
             if let action = Container.infix(from: character.toString) {
-                let token = Token(stringValue: character.toString, type: .infix(action))
-                tokenizedExpression.add(token)
+                tokenizedExpression.add(.infix(action))
                 scanner.incrementIndex()
                 continue
             }
             
             if let action = Container.postfix(from: character.toString) {
-                let token = Token(stringValue: character.toString, type: .postfix(action))
-                tokenizedExpression.add(token)
+                tokenizedExpression.add(.postfix(action))
                 scanner.incrementIndex()
                 continue
             }

@@ -23,25 +23,64 @@
 
 import Foundation
 
-public struct Token: Equatable {
+public enum Token: Equatable {
     
-    public let stringValue: String
-    
-    public let type: TokenType
-    
-    public enum TokenType: Equatable {
+    public enum Bracket: String, RawRepresentable {
         
-        case decimal(NSDecimalNumber)
-        case infix(InfixAction)
-        case postfix(PostfixAction)
+        case open = "("
+        
+        case close = ")"
     }
     
-    public init(stringValue: String, type: TokenType) {
-        self.stringValue = stringValue
-        self.type = type
-    }
+    case decimal(NSDecimalNumber)
     
-    public init(constant: NSDecimalNumber) {
-        self.init(stringValue: "\(constant.doubleValue, format: "%g")", type: .decimal(constant))
+    case infix(InfixAction)
+    
+    case postfix(PostfixAction)
+    
+    case bracket(Bracket)
+}
+
+extension Token: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        switch self {
+        case .decimal(let decimal):     return "\(decimal, format: "%g")"
+        case .infix(let action):        return "\(action.stringValue)"
+        case .postfix(let action):      return "\(action.stringValue)"
+        case .bracket(let bracket):     return "\(bracket.rawValue)"
+        }
     }
 }
+
+//public struct Token: Equatable {
+//    
+//    public let stringValue: String
+//    
+//    public let type: TokenType
+//    
+//    public enum TokenType: Equatable {
+//        
+//        public enum Bracket {
+//            case open
+//            case close
+//        }
+//        
+//        case decimal(NSDecimalNumber)
+//        
+//        case infix(InfixAction)
+//        
+//        case postfix(PostfixAction)
+//        
+//        case bracket(Bracket)
+//    }
+//    
+//    public init(stringValue: String, type: TokenType) {
+//        self.stringValue = stringValue
+//        self.type = type
+//    }
+//    
+//    public init(constant: NSDecimalNumber) {
+//        self.init(stringValue: "\(constant.doubleValue, format: "%g")", type: .decimal(constant))
+//    }
+//}
